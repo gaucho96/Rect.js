@@ -1,6 +1,6 @@
 export default class {
 
-    static init(id, {dependencies, overrides}) {
+    static drawPath(id, {dependencies, overrides}) {
 
         /**
          * @deps

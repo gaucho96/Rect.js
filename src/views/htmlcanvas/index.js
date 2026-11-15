@@ -54,7 +54,7 @@ export class HTMLCanvas {
         static #responsify({stage}) {
 
             const
-                GRIDCELL_DIM = ( stage.clientWidth / this.#evenNumber( stage.scale ) )
+                GRIDCELL_DIM = ( stage.clientWidth / this.#evenNumber( stage.scale ) )*devicePixelRatio
                 ,
                 divisorX = Math.ceil( stage.clientWidth / GRIDCELL_DIM )
                 ,
