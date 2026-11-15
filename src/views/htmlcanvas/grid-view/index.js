@@ -10,8 +10,6 @@ export class grid_view {
     */
     static draw({context, options}){
 
-        const DPR = window.devicePixelRatio;
-
         let 
             gridcellDim = stage.grid.GRIDCELL_DIM
             ,
