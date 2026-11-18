@@ -1,66 +1,37 @@
-import { setRange } from "../modules/maths/index.js";
-
 export class grid_view {
 
     /**
-     * The `default.draw` static method takes single `Object` as its input whose properties are as follows:
-     * @param {HTMLCanvasElement} `canvas` - a reference to `canvas` (_a.k.a. "Layer"_)
-     * @param {Object} `options`           - options you have passed to shape's current `context` of the current `canvas` reference
-     * @returns {CanvasRenderingContext2D} `context` - the modified `context` with a `grid` view "painted" on the `<canvas>` hosted bitmap
-    */
-    static draw({context, options}){
+     * @param {{context: CanvasRenderingContext2D, options: Object}} params
+     * @returns {CanvasRenderingContext2D}
+     */
+    static draw({context, options = {}}){
+        const dpr = window.devicePixelRatio || 1;
+        const cell = stage.grid.GRIDCELL_DIM;           // CSS px
+        const w = context.canvas.width / dpr, h = context.canvas.height / dpr;
+        const lw = options.lineWidth || 1;
 
-        let 
-            gridcellDim = stage.grid.GRIDCELL_DIM
-            ,
-            gridcellMatrix = setRange(0, gridcellDim, context.canvas.width)
-            ;
-        
-        context.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+        context.setTransform(1, 0, 0, 1, 0, 0);
         context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-        
-        
-        /** {@link https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Transformations} */
-        function drawGrid(x, y, xLen = gridcellDim, yLen = gridcellDim) {
+        context.setTransform(dpr, 0, 0, dpr, 0, 0);
+        context.kind = options.kind || 'grid';
+        context.lineWidth = lw;
+        context.strokeStyle = options.strokeStyle || 'black';
+        if (options.hidden || !(cell > 0)) return context;
 
-            if (options.dotted){
-                const improveVisibility = (dot)=> dot = dot*stage.grid.GRIDCELL_DIM;
-                [xLen, yLen] = [1/gridcellDim, 1/gridcellDim].map(improveVisibility)
+        /** snap to device pixels so strokes stay crisp */
+        const snap = v => (Math.round(v * dpr) + (Math.round(lw * dpr) % 2 ? 0.5 : 0)) / dpr;
+        const maxCol = Math.floor(w / cell), maxRow = Math.floor(h / cell);
 
-            } else {
-                [xLen, yLen] = [1*gridcellDim, 1*gridcellDim]
-            }
-
-            context.beginPath();
-            
-            context.rect(x, y, xLen, yLen);
-            context.kind = options?.kind || 'grid';
-            context.lineWidth = options?.lineWidth || 1;
-            context.strokeStyle = options?.strokeStyle || 'black';
-            options.hidden ? false : context.stroke();
-
+        context.beginPath();
+        if (options.dotted) {
+            for (let r = 0; r <= maxRow; r++)
+                for (let c = 0; c <= maxCol; c++) context.rect(snap(c * cell), snap(r * cell), 1, 1);
+        } else {
+            for (let c = 0; c <= maxCol; c++) { const x = snap(c * cell); context.moveTo(x, 0); context.lineTo(x, h); }
+            for (let r = 0; r <= maxRow; r++) { const y = snap(r * cell); context.moveTo(0, y); context.lineTo(w, y); }
         }
-
-        const divisorY = Math.ceil( stage.clientHeight / gridcellDim );
-
-        for (let row = 1; row <= divisorY; row++) {
-
-            gridcellMatrix.forEach((_, col)=>{
-
-                if( row === 1/* if it's very 1st row, see cont'd... */ ){
-
-                    drawGrid(gridcellDim * col, 0); /* [cont'd] ...fill the row */
-
-                }
-
-                drawGrid(gridcellDim * col, gridcellDim * row);
-
-            });
-
-        }
-
+        context.stroke();
         return context;
-    
     }
 
 }

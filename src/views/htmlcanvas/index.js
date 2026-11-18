@@ -53,9 +53,10 @@ export class HTMLCanvas {
          */
         static #responsify({stage}) {
 
+            /** @type {number} cell size in CSS px; DPR is applied only by the canvas transform */
+            const GRIDCELL_DIM = stage.clientWidth / this.#evenNumber( stage.scale )
+            ;
             const
-                GRIDCELL_DIM = ( stage.clientWidth / this.#evenNumber( stage.scale ) )*devicePixelRatio
-                ,
                 divisorX = Math.ceil( stage.clientWidth / GRIDCELL_DIM )
                 ,
                 divisorY = Math.ceil( stage.clientHeight / GRIDCELL_DIM )
