@@ -24,22 +24,16 @@ customElements.define(svg_path, class extends HTMLElement {
             COLOR = PRINT
             ;
 
-        !options.hidden 
-            ?
-                ( 
-                    this.setHTMLUnsafe(/* html */`
-                        <path
-                            id="${ options.id }" 
-                            d="${ setPoints.call(this, options.points) }"
-                            stroke-dasharray="${ options.dashed  || 0 }"
-                            stroke-width="${ options.strokeWidth || 0 }"
-                            style="opacity:${ options.opacity }; stroke:${ (options.stroke || options.fillStroke ) || COLOR.black }; fill:${ (options.fill || options.fillStroke) || COLOR.none };"
-                        />
-                    `)
-                )
-            :
-            false 
-            ;
+
+            this.setHTMLUnsafe(/* html */`
+                <path
+                    id="${ options.id }" 
+                    d="${ setPoints.call(this, options.points) }"
+                    stroke-dasharray="${ options.dashed  || 0 }"
+                    stroke-width="${ options.strokeWidth || 0 }"
+                    style="opacity:${ options.opacity }; stroke:${ (options.stroke || options.fillStroke ) || COLOR.black }; fill:${ (options.fill || options.fillStroke) || COLOR.none };"
+                />
+            `);
 
             this.#setDataAttrs.call(
                 this
@@ -53,7 +47,7 @@ customElements.define(svg_path, class extends HTMLElement {
                         ['data-skew_y',  ( options.skew_y  || 0 )],
                     ])
                 }
-            )
+            );
 
         return;
 

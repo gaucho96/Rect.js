@@ -23,10 +23,14 @@ export default class {
                 }
         ;
 
-        const halfOfMySize = (stage.grid.GRIDCELL_DIM/2);
+        const 
+            halfOfMySize = (stage.grid.GRIDCELL_DIM/2)
+            ,
+            scalingFactor$shared = 2
+            ;
 
         const [renderer] = this.setup({XMLSVG});
-
+        
             noPath(ENUMS.ID.circle_top)
             ? /* no path in DOM? - when draw a path! */
             UnitCircle.drawPath(renderer.id, {
@@ -39,15 +43,15 @@ export default class {
                         fill: ENUMS.COLOR.orange,
                         dashed: 5, 
                         strokeWidth: 2,
-                        scalingFactor: 1 * stage.grid.GRIDCELL_DIM,
-                        opacity: 1,
+                        scalingFactor: scalingFactor$shared * stage.grid.GRIDCELL_DIM,
+                        opacity: 1/* set it to 0, if you want to hide the shape, visually! */,
                         transformations: {
                             SCALE_X: 1,
                             SCALE_Y: 1,
-                            offsetX: Math.floor(stage.grid.SVG.X_IN_MIDDLE) - halfOfMySize,
-                            offsetY: Math.floor(stage.grid.SVG.Y_IN_MIDDLE) - halfOfMySize,
+                            offsetX: Math.floor(stage.grid.SVG.X_IN_MIDDLE) - halfOfMySize*scalingFactor$shared,
+                            offsetY: Math.floor(stage.grid.SVG.Y_IN_MIDDLE) - halfOfMySize*scalingFactor$shared,
                             angle: 0,
-                            /* skew: { X: { phi: 30 } }, *//* change letter X with Y, and see the difference */
+                            /* skew: { X|Y: { phi: -45 } }, */// choose from {X|Y}
                         }
                     }
                 }
